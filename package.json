@@ -1,0 +1,14 @@
+{
+  "name": "assimilation-presentation",
+  "version": "1.0.0",
+  "description": "A reveal.js presentation on assimilating a PHP FE into Backbone",
+  "main": "assimilation-presentation.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alex Pearson",
+  "license": "MIT",
+  "dependencies": {
+    "reveal.js": "^3.5.0"
+  }
+}

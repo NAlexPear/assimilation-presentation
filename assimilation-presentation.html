@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Front-End Assimilation</title>
+<link rel="stylesheet" href="node_modules/reveal.js/css/reveal.css">
+<link rel="stylesheet" href="node_modules/reveal.js/css/theme/solarized.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.11.0/styles/railscasts.min.css">
+<style media="screen">
+        body{
+            background: #131313;
+            background-color: #131313;
+        }
+
+        .reveal{
+            color: white;
+        }
+
+        .reveal h1,
+        .reveal h2,
+        .reveal h3,
+        .reveal h4 {
+            color: white;
+        }
+
+        .reveal pre,
+        .reveal pre code{
+            width: initial;
+            max-height: 550px;
+            box-shadow: none;
+        }
+
+        .hljs{
+            background-color: transparent;
+        }
+    </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section data-markdown data-background-image="https://thumbs.gfycat.com/AlertHarmlessHookersealion-size_restricted.gif">
+<textarea data-template>
+                    # Resistance is Futile
+                    ### Assimilating Peacefully into the Front-End Collective
+                </textarea>
+</section>
+<section data-markdown>
+<textarea data-template>
+                    ## Table of Contents
+
+                    1. The End Goal <!-- .element: class="fragment" data-fragment-index="1" -->
+                    2. The State of <!-- .element: class="fragment" data-fragment-index="2" -->~~the Federation~~ Pivot <!-- .element: class="fragment" data-fragment-index="2" -->
+                    3. Why Assimilating is Hard <!-- .element: class="fragment" data-fragment-index="3" -->
+                    4. Assimilating Anyway <!-- .element: class="fragment" data-fragment-index="4" -->
+                </textarea>
+</section>
+<section>
+<section data-markdown>
+<textarea data-template>
+                        ## The Perfect Pivot
+                    </textarea>
+</section>
+<section data-background-iframe="diagrams/perfect-world.html" data-interactive>
+</section>
+</section>
+<section>
+<section data-markdown>
+<textarea data-template>
+                        ## The Current Pivot
+                    </textarea>
+</section>
+<section data-background-iframe="diagrams/not-so-perfect-world.html" data-interactive>
+</section>
+</section>
+<section data-markdown>
+<textarea data-template>
+                    ## Why Assimilation Matters
+
+                    1. Performance gains <!-- .element: class="fragment" data-fragment-index="1" -->
+                    2. Perceived performance gains <!-- .element: class="fragment" data-fragment-index="2" -->
+                    3. Easier maintenance <!-- .element: class="fragment" data-fragment-index="3" -->
+                    4. Better developer QoL <!-- .element: class="fragment" data-fragment-index="4" -->
+                </textarea>
+</section>
+<section data-background-image="http://68.media.tumblr.com/a931f6ca52f8f154f28e8505a045245a/tumblr_mt144dqdVe1s8ndsfo1_400.gif">
+</section>
+<section data-markdown>
+<textarea data-template>
+                    ## Previous Efforts
+
+                    ![no php allowed](https://media.giphy.com/media/GOvAlgzPN7MNG/giphy.gif)
+                </textarea>
+</section>
+<section data-markdown>
+<textarea data-template>
+                    ## The Five-Step Five-Star Front-End Legacy Assimilation Plan
+                    ### (the FSFSFLEAP)
+                </textarea>
+</section>
+<section>
+<section data-markdown>
+<textarea data-template>
+                        ## FSFSFLEAPing by example:
+                    </textarea>
+</section>
+<section data-markdown>
+<textarea data-template>
+                        #### Exhibit A:
+                        ![bad php](diagrams/form_bad.png)
+                    </textarea>
+</section>
+<section data-markdown>
+<textarea data-template>
+                        ## Stage 0:
+
+                        Stop writing bad PHP
+                    </textarea>
+</section>
+<section data-markdown>
+<textarea data-template>
+                        1. no inline styles (use a stylesheet)
+                        2. no tables-as-grids (use divs + grids/columns/flexbox)
+                        3. minimize templating logic
+                    </textarea>
+</section>
+<section data-markdown>
+<textarea data-template>
+                        ## Stage 1:
+
+                        Handlers, Managers, and Twig Templates
+                    </textarea>
+</section>
+<section data-markdown>
+<textarea data-template>
+                        ## Stage 1 Goals:
+
+                        1. Separate concerns
+                        2. Prepare for front-end rendering
+                        3. Maintain feature parity
+                    </textarea>
+</section>
+<section data-markdown>
+<textarea data-template>
+                        `add-location.php`
+
+                        ```php
+                        use Pivot\Core\TwigWrapper;
+                        use Pivot\Core\LocationHandler;
+
+                        $twig = new TwigWrapper();
+                        $handler = new LocationHandler();
+
+                        $fields = $handler->getFields();
+
+                        $twigData = [
+                            "fields" => $fields
+                        ];
+
+                        $twig->render( "add-location.twig" , $twigData );
+                        ```
+                    </textarea>
+</section>
+<section data-markdown>
+<textarea data-template>
+                        `add-location.twig`
+
+                        ```twig
+                        <form method="get" action="../endpoint.php" onclick="doStuff();">
+                            <input type="hidden" name="action" value="authenticationsource" />
+                            <input type="hidden" name="scopes" value="profile email" />
+                            {% for field in fields %}
+                                <div class="row">
+                                    <div class="column">{{field.label}}: </div>
+                                    <div class="column">
+                                        <input type="text" name="{{field.label}}" value=""/>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <button class="primary success">Create New Authentication Source</button>
+                        </form>
+                        ```
+</textarea>
+</section>
+<section data-markdown>
+<textarea data-template>
+                        `/Pivot/Core/LocationHandler.php`
+
+                        ```php
+                        class LocationHandler{
+                            private $cfg;
+                            private $db;
+
+                            public function __construct(){
+                                global $CFG, $db;
+
+                                $this->cfg = $CFG;
+                                $this->db = $db;
+                            }
+                            public function getFields(){
+                                $this->db->queryAll( "SELECT stuff FROM place" );
+                            }
+                        }
+                        ```
+                    </textarea>
+</section>
+<section data-markdown>
+<textarea data-template>
+                        ## Stage 2:
+
+                        FEBE, Middleman, and twig.js
+                    </textarea>
+</section>
+<section data-markdown>
+<textarea data-template>
+                        ## Stage 2 Goals:
+
+                        1. Render twig templates client-side
+                        2. Offload all business logic to Backbone.Views
+                        3. Use FEBE to handle routing
+                        4. Use Middleman to handle "API"
+                        5. Maintain feature parity
+                    </textarea>
+</section>
+<section data-markdown>
+<textarea data-template>
+                        `/src/slim/apps/febe/Routes/legacy.json`
+
+                        ```json
+                        {
+                            "name": "admin-add-location",
+                            "title": "Add New Location",
+                            "route": {
+                                "slim": "/admin/locations/add",
+                                "sammy": "/admin/locations/add"
+                            },
+                            "template": "legacy/legacy-bootstrap.twig",
+                            "client": {
+                                "controller": "Legacy",
+                                "action": "addLocation"
+                            },
+                            "dependencies": {
+                                "js": [
+                                    // external JS
+                                ],
+                                "css": [
+                                    // external CSS
+                                ],
+                                "generateCss": true
+                            }
+                        }
+                        ```
+                    </textarea>
+</section>
+<section data-markdown>
+<textarea data-template>
+                        `/src/js/apps/legacy/views/admin/location/add.js`
+
+                        ```javascript
+                        import Backbone from "strap/backbone";
+                        import $ from "jquery";
+                        import template from "vw/admin/location/add.twig";
+
+                        export default Backbone.View.extend( {
+                            template,
+                            initialize(){
+                                $.ajax( "/api/location/fields" ).then(
+                                    ( fields ) => this.render( fields )
+                                );
+                            },
+                            render( fields ){
+                                this.$el.html( this.template( { fields } ) );
+
+                                return this;
+                            }
+                        } );
+                        ```
+                    </textarea>
+</section>
+<section data-markdown>
+<textarea data-template>
+                        `/src/slim/apps/middleman/Routes/locations.json`
+
+                        ```json
+                        {
+                            "route": "/location/fields",
+                            "controller": "Locations\\Fields",
+                            "methods": [ "GET" ]
+                        }
+                        ```
+                    </textarea>
+</section>
+<section data-markdown>
+<textarea data-template>
+                        `/../middleman/Controllers/Locations/Fields.php`
+                        ```php
+                        use Middleman\Controller;
+                        use Pivot\Core\LocationHandler as Handler;
+
+                        class Filter extends Controller{
+                            function reply(){
+                                $handler = new Handler();
+                                $fields = $handler->getFields();
+
+                                return $this
+                                    ->emptyResponse( $response )
+                                    ->withJson( $fields, $response->getStatusCode() );
+                            }
+                        ```
+                    </textarea>
+</section>
+<section data-markdown>
+<textarea data-template>
+                        ## Stage 3:
+
+                        Componentization and Styling
+                    </textarea>
+</section>
+<section data-markdown>
+<textarea data-template>
+                        ## Stage 3 Goals:
+
+                        1. Replace one-off parts with FE components
+                        2. Remove in-lined JS and CSS dependencies
+                        3. Re-factor UI for client-side applications
+                        4. Update all styles to FE standards
+                    </textarea>
+</section>
+<section data-markdown>
+<textarea data-template>
+                        `/src/js/apps/legacy/views/admin/location/add.js`
+
+                        ```javascript
+                        import Backbone from "strap/backbone";
+                        import $ from "jquery";
+                        import Filters from "component/Filters";
+                        import Window from "helpers/Window";
+
+                        export default Backbone.View.extend( {
+                            initialize(){
+                                var fieldsRequest = $.ajax( "/api/location/fields" );
+
+                                this.filters = new Filters( {
+                                    "sideBySide": false,
+                                    "submitButton": true
+                                } );
+
+                                this.listenTo(
+                                    this.filters,
+                                    "click:button:submit",
+                                    () => {
+                                        var data = this.filters.getFilterValuesAsJson();
+
+                                        $.post( "/endpoint.php", data ).then(
+                                            () => Window.navigate( "somewhere" )
+                                        );
+                                    }
+                                );
+
+                                fieldsRequest.then(
+                                    ( fields ) => this
+                                        .filters
+                                        .updateWithNewDefinitions( fields )
+                                );
+
+                                this.render();
+                            },
+                            render(){
+                                this.$el.append( this.filters.$el );
+
+                                return this;
+                            }
+                        } );
+                        ```
+                    </textarea>
+</section>
+<section data-markdown>
+<textarea data-template>
+                        ## Stage 4
+
+                        The Purge
+                    </textarea>
+</section>
+<section data-markdown>
+<textarea data-template>
+                        ## Stage 4 Goals:
+
+                        1. Move pages out of the "Legacy" sandbox
+                        2. Purge all remaining Twig templates
+                    </textarea>
+</section>
+<section data-markdown>
+<textarea data-template>
+                        ## Stage 5
+
+                        Back-End Refactoring
+                    </textarea>
+</section>
+<section data-markdown>
+<textarea data-template>
+                        ## Stage 5 Goals:
+
+                        1. Re-implement Middleman Routes in API
+                        2. Or not, whatevs
+                    </textarea>
+</section>
+</section>
+<section data-background-image="https://i.giphy.com/O0D65tHcivBew.webp">
+</section>
+</div>
+</div>
+<script src="node_modules/reveal.js/lib/js/head.min.js"></script>
+<script src="node_modules/reveal.js/js/reveal.js" charset="utf-8"></script>
+<script type="text/javascript">
+        Reveal.initialize({
+            "controls": false,
+            "history": true,
+            "dependencies": [
+                { "src": "node_modules/reveal.js/plugin/markdown/marked.js" },
+                { "src": "node_modules/reveal.js/plugin/markdown/markdown.js" },
+                { "src": "node_modules/reveal.js/plugin/notes/notes.js", "async": true },
+                { "src": "node_modules/reveal.js/plugin/highlight/highlight.js", "async": true, callback(){ hljs.initHighlightingOnLoad(); } }
+            ]
+        });
+    </script>
+</body>
+</html>
